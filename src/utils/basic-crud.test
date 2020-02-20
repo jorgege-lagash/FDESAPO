@@ -1,0 +1,128 @@
+import { createBasicCrudRequests } from 'src/utils/basic-crud.api';
+
+const entityName = 'tests';
+const api = createBasicCrudRequests<any>(entityName);
+
+it('create testEntity', async () => {
+  expect.assertions(2);
+  const testEntityData = {
+    id: 0,
+    name: 'Sports',
+  };
+  (fetch as any).resetMocks();
+  (fetch as any).mockResponses([
+    JSON.stringify(testEntityData),
+    { status: 201 },
+  ]);
+
+  try {
+    const response = await api.create(1, testEntityData);
+    expect(response).toBeTruthy();
+    expect(response).toEqual(testEntityData);
+  } catch (error) {
+    expect(error).toBeFalsy();
+  }
+});
+
+it('update testEntity', async () => {
+  expect.assertions(2);
+  const testEntityData = {
+    id: 1,
+    mallId: 1,
+    name: 'Sports',
+  };
+  (fetch as any).resetMocks();
+  (fetch as any).mockResponses([
+    JSON.stringify(testEntityData),
+    { status: 201 },
+  ]);
+
+  try {
+    const response = await api.update(1, 1, testEntityData);
+    expect(response).toBeTruthy();
+    expect(response).toEqual(testEntityData);
+  } catch (error) {
+    expect(error).toBeFalsy();
+  }
+});
+
+it('get testEntity by id', async () => {
+  expect.assertions(2);
+  const testEntityData = {
+    id: 1,
+    mallId: 1,
+    name: 'Sports',
+  };
+  (fetch as any).resetMocks();
+  (fetch as any).mockResponses([
+    JSON.stringify(testEntityData),
+    { status: 201 },
+  ]);
+
+  try {
+    const response = await api.fetchById(1, 1);
+    expect(response).toBeTruthy();
+    expect(response).toEqual(testEntityData);
+  } catch (error) {
+    expect(error).toBeFalsy();
+  }
+});
+
+it('fetchAll', async () => {
+  expect.assertions(2);
+  const testEntityList = [
+    {
+      id: 1,
+      mallId: 1,
+      name: 'Sports',
+    },
+    {
+      id: 2,
+      mallId: 1,
+      name: 'Sports',
+    },
+  ];
+  (fetch as any).resetMocks();
+  (fetch as any).mockResponses([
+    JSON.stringify(testEntityList),
+    { status: 201 },
+  ]);
+
+  try {
+    const response = await api.fetchAll(1);
+    expect(response).toBeTruthy();
+    expect(response.length).toBe(2);
+  } catch (error) {
+    expect(error).toBeFalsy();
+  }
+});
+
+it('fetchPage', async () => {
+  expect.assertions(2);
+  const testEntityList = [
+    {
+      id: 1,
+      mallId: 1,
+      name: 'Sports',
+    },
+    {
+      id: 2,
+      mallId: 1,
+      name: 'Sports',
+    },
+  ];
+  (fetch as any).resetMocks();
+  (fetch as any).mockResponses([
+    JSON.stringify({ data: testEntityList }),
+    { status: 201 },
+  ]);
+
+  try {
+    const response = await api.fetchPage(1, 1, 10);
+    expect(response).toBeTruthy();
+    expect(response.data).toBeTruthy();
+    expect(response.data.length).toBe(2);
+  } catch (error) {
+    expect(error).toBeFalsy();
+  }
+});

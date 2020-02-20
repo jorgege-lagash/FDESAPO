@@ -1,0 +1,83 @@
+definitions:
+  services:
+    docker:
+      memory: 3072
+      
+image: node:10.10.0-alpine
+pipelines:
+  branches:
+    master:
+      - step:
+          name: Build DEV
+          script:
+            - yarn install
+            - GENERATE_SOURCEMAP=false REACT_APP_SITE_TITLE='Parque Arauco CMS' REACT_APP_API_URL=$REACT_APP_API_URL_DEV yarn build
+          artifacts:
+            - build/**
+      - step:
+          name: Deploy to DEV
+          script:
+            - pipe: atlassian/aws-s3-deploy:0.2.4
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_DEV
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_DEV
+                AWS_DEFAULT_REGION: 'us-east-1'
+                S3_BUCKET: 'ecosis-dev-bucket-v2/cms'
+                LOCAL_PATH: "build"
+      - step:
+          name: Build QA
+          trigger: manual
+          script:
+            - yarn install
+            - GENERATE_SOURCEMAP=false REACT_APP_SITE_TITLE='Parque Arauco CMS' REACT_APP_API_URL=$REACT_APP_API_URL_QA yarn build
+          artifacts:
+            - build/**
+      - step:
+          name: Deploy to QA
+          trigger: manual
+          script:
+            - pipe: atlassian/aws-s3-deploy:0.2.4
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_QA
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_QA
+                AWS_DEFAULT_REGION: 'us-east-1'
+                S3_BUCKET: 'ecosis-qa-bucket-v2/cms'
+                LOCAL_PATH: "build"
+      - step:
+          name: Build UAT
+          trigger: manual
+          script:
+            - yarn install
+            - GENERATE_SOURCEMAP=false REACT_APP_SITE_TITLE='Parque Arauco CMS' REACT_APP_API_URL=$REACT_APP_API_URL_UAT yarn build
+          artifacts:
+            - build/**
+      - step:
+          name: Deploy to UAT
+          trigger: manual
+          script:
+            - pipe: atlassian/aws-s3-deploy:0.2.4
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_UAT
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_UAT
+                AWS_DEFAULT_REGION: 'us-east-1'
+                S3_BUCKET: 'ecosis-uat-bucket/cms'
+                LOCAL_PATH: "build"
+      - step:
+          name: Build PROD
+          trigger: manual
+          script:
+            - yarn install
+            - GENERATE_SOURCEMAP=false REACT_APP_SITE_TITLE='Parque Arauco CMS' REACT_APP_API_URL=$REACT_APP_API_URL_PROD yarn build
+          artifacts:
+            - build/**
+      - step:
+          name: Build & Deploy to PROD
+          trigger: manual
+          script:
+            - pipe: atlassian/aws-s3-deploy:0.2.4
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_PROD
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_PROD
+                AWS_DEFAULT_REGION: 'us-east-1'
+                S3_BUCKET: 'ecosis-prod-bucket-v2/cms'
+                LOCAL_PATH: "build"

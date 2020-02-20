@@ -1,0 +1,25 @@
+definitions:
+  services:
+    docker:
+      memory: 3072
+      
+image: node:10.10.0-alpine
+pipelines:
+  default:
+      - step:
+          name: Build
+          script:
+            - yarn install
+            - GENERATE_SOURCEMAP=false REACT_APP_SITE_TITLE='Parque Arauco CMS' yarn build
+          artifacts:
+            - build/**
+      - step:
+          name: Deploy to S3
+          script:
+            - pipe: atlassian/aws-s3-deploy:0.2.4
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: 'us-east-1'
+                S3_BUCKET: 'ecosis-dev-bucket-v2/cms'
+                LOCAL_PATH: "build"

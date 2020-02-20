@@ -1,0 +1,24 @@
+FROM node:10.10.0-alpine AS build-env
+
+ARG REACT_APP_SITE_TITLE=PArauco
+ARG REACT_APP_API_URL='http://arauco-api-develop.applaudostudios.com/api/v1/'
+ARG REACT_APP_DEFAULT_LOCALE='es'
+
+ENV REACT_APP_SITE_TITLE=${REACT_APP_SITE_TITLE}
+ENV REACT_APP_API_URL=${REACT_APP_API_URL}
+ENV REACT_APP_DEFAULT_LOCALE=${REACT_APP_DEFAULT_LOCALE}
+WORKDIR /usr/src/app
+# Copy package.json and restore as distinct layers
+COPY package.json yarn.lock ./
+RUN yarn
+# Copy everything else and build
+COPY . .
+RUN yarn build
+
+# Build runtime image
+FROM nginx:1.13.9-alpine
+# Add new config
+RUN rm -rf /etc/nginx/conf.d
+COPY conf /etc/nginx
+
+COPY --from=build-env /usr/src/app/build /usr/share/nginx/html

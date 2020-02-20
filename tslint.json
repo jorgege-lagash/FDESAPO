@@ -1,0 +1,43 @@
+{
+  "extends": [
+    "tslint:recommended",
+    "tslint-react",
+    "tslint-config-prettier",
+    "tslint-sonarts"
+  ],
+  "rules": {
+    "no-unused-expression": { "severity": "warning" },
+    "ordered-imports": {
+      "severity": "off"
+    },
+    "interface-name": [true, "never-prefix"],
+    "quotemark": [
+      true,
+      "single",
+      "avoid-escape",
+      "avoid-template",
+      "jsx-double"
+    ],
+    "no-unused-variable": {
+      "severity": "warning"
+    },
+    "no-commented-code": {
+      "severity": "warning"
+    },
+    "object-literal-sort-keys": {
+      "severity": "off"
+    },
+    "no-console": {
+      "severity": "warning"
+    }
+  },
+  "linterOptions": {
+    "exclude": [
+      "**/*.js",
+      "**/node_modules/**",
+      "config/**/*.js",
+      "node_modules/**/*.ts",
+      "coverage/lcov-report/*.js"
+    ]
+  }
+}

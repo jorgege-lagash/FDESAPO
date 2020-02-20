@@ -1,0 +1,39 @@
+@import '../../styles/variables.less';
+.loginBackground {
+  background: linear-gradient(to bottom, #002140 35%, #dfdfdf 0%);
+}
+
+.loginCard {
+  padding-top: 60px;
+  padding-bottom: 70px;
+  padding-right: 70px;
+  padding-left: 70px;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  &:hover {
+    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
+  }
+  @media @mobile-xs {
+    border-radius: 0;
+    width: 100%;
+    height: 100vh;
+  }
+}
+
+.paraucoLogo {
+  display: block;
+  margin-bottom: 60px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
+  height: auto;
+}
+
+.version {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
